@@ -3,6 +3,7 @@
 var Popup;
 Popup = function(){
     this.el = {
+        bodyEle:$("body"),
         popupWrap:$(".js-popup-wrap"),
         popupBg:$(".popup-bg"),
         popupContent:$(".popup-content"),
@@ -34,7 +35,8 @@ Popup.prototype.init = function(){
 
 Popup.prototype.events = function(){
     this.imgClick();
-    this.togglePopup();
+    this.closePopup();
+    this.closePopupAgain();
 };
 
 Popup.prototype.appendHtml = function(){
@@ -60,11 +62,30 @@ Popup.prototype.imgClick = function(){
     });
 };
 
-Popup.prototype.togglePopup = function(){
+Popup.prototype.closePopup = function(){
     var _this = this;
     this.el.popupClose.on("click", function(){
         _this.el.popupBg.hide();
         _this.el.popupContent.hide();
     });
 };
+
+Popup.prototype.closePopupAgain = function(){
+    var _this = this;
+    if(this.el.popupContent.length){
+        this.el.bodyEle.on("click", function(e){
+            var target = $(e.target);
+            var parent = target.closest(_this.el.popupBg);
+            var imgPop = target.closest(_this.el.popupContent);
+            if(parent.length){
+                if(!imgPop.length){
+                    _this.el.popupClose.trigger('click');
+                }
+            }
+        }) 
+    }
+    
+};
+
+
 new Popup(); 
